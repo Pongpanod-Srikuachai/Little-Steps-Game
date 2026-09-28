@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#f6f3ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Little Steps</title>
+<link rel="icon" type="image/png" href="index.icon.png">
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png">
+<style>
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#f6f3ec}
+body{position:fixed;inset:0;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#game-wrap{position:fixed;inset:0;width:100vw;height:100dvh;overflow:hidden;background:#f6f3ec}
+#canvas{display:block;width:100%;height:100%;outline:none;background:#f6f3ec;touch-action:none}
+#loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:28px;background:#f6f3ec;color:#333;font:600 17px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-align:center;z-index:20}
+#loading.hidden{display:none}
+#loading .box{max-width:360px;line-height:1.55}
+#loading button{margin-top:18px;border:0;border-radius:12px;padding:12px 20px;font-size:16px;font-weight:700;background:#333;color:#fff}
+small{font-weight:500}
+@supports not (height:100dvh){#game-wrap{height:100vh}}
+</style>
+</head>
+<body>
+<div id="game-wrap"><canvas id="canvas" tabindex="0"></canvas></div>
+<div id="loading"><div class="box">Loading Little Steps…</div></div>
+<script src="index.js"></script>
+<script>
+(function(){
+  'use strict';
+  const canvas=document.getElementById('canvas');
+  const wrap=document.getElementById('game-wrap');
+  const loading=document.getElementById('loading');
+
+  function viewport(){
+    const vv=window.visualViewport;
+    const w=Math.max(1,Math.round(vv?vv.width:window.innerWidth));
+    const h=Math.max(1,Math.round(vv?vv.height:window.innerHeight));
+    wrap.style.width=w+'px';
+    wrap.style.height=h+'px';
+    canvas.style.width=w+'px';
+    canvas.style.height=h+'px';
+  }
+  function message(html){
+    loading.classList.remove('hidden');
+    loading.innerHTML='<div class="box">'+html+'</div>';
+  }
+  function isInApp(){
+    const ua=navigator.userAgent||'';
+    return /FBAN|FBAV|Instagram|Line\/|Messenger|GSA\//i.test(ua);
+  }
+  function hasWebGL2(){
+    try{
+      const c=document.createElement('canvas');
+      return !!(c.getContext('webgl2')||c.getContext('experimental-webgl2'));
+    }catch(e){return false;}
+  }
+
+  viewport();
+  addEventListener('resize',viewport,{passive:true});
+  addEventListener('orientationchange',()=>setTimeout(viewport,250),{passive:true});
+  if(window.visualViewport) visualViewport.addEventListener('resize',viewport,{passive:true});
+
+  // Godot Web uses WebGL 2. Mobile Safari/Chrome support it, but some
+  // in-app browsers (including some Messenger versions) do not expose it.
+  if(!hasWebGL2()){
+    if(isInApp()){
+      message('<b>เปิดเกมด้วย Safari หรือ Chrome</b><br><small>เบราว์เซอร์ภายใน Messenger ไม่ได้เปิดใช้ WebGL 2 สำหรับเกมนี้</small><br><button onclick="location.reload()">ลองใหม่</button>');
+    }else{
+      message('<b>เบราว์เซอร์นี้ไม่รองรับเกม</b><br><small>กรุณาใช้ Safari หรือ Chrome เวอร์ชันล่าสุด</small><br><button onclick="location.reload()">ลองใหม่</button>');
+    }
+    return;
+  }
+
+  try{
+    const config={
+      args:[],
+      canvasResizePolicy:2,
+      // Keep this false: the supplied Web export is intended to run without
+      // requiring SharedArrayBuffer/Cross-Origin Isolation headers.
+      ensureCrossOriginIsolationHeaders:false,
+      executable:'index',
+      experimentalVK:true,
+      fileSizes:{'index.pck':5771976,'index.wasm':37902138},
+      focusCanvas:true,
+      gdextensionLibs:[],
+      godotPoolSize:2
+    };
+
+    const engine=new Engine(config);
+    engine.startGame({
+      canvas:canvas,
+      canvasResizePolicy:2,
+      focusCanvasOnStart:true,
+      experimentalVK:true
+    }).then(function(){
+      loading.classList.add('hidden');
+      viewport();
+    }).catch(function(err){
+      console.error('Little Steps:',err);
+      message('<b>เกมโหลดไม่สำเร็จ</b><br><small>'+String(err&&err.message?err.message:err).replace(/[<>]/g,'')+'</small><br><button onclick="location.reload()">Refresh</button>');
+    });
+  }catch(err){
+    console.error(err);
+    message('<b>เกมเริ่มทำงานไม่ได้</b><br><small>'+String(err&&err.message?err.message:err).replace(/[<>]/g,'')+'</small>');
+  }
+})();
+</script>
+</body>
+</html>
