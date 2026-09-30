@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#10182a">
+<title>Little Steps</title>
+<style>
+:root{
+ --bg:#10182a;--panel:#18233a;--panel2:#202e49;--cream:#fff5df;--muted:#aebbd0;
+ --yellow:#ffc765;--blue:#79c6d8;--green:#78d7aa;--pink:#ff91ae;--danger:#ff7474;
+ --shadow:0 18px 50px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;min-height:100%;background:var(--bg);color:var(--cream);font-family:system-ui,-apple-system,"Segoe UI","Noto Sans Thai",sans-serif}
+body{min-height:100vh;overflow-x:hidden}
+button{font:inherit}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.hidden{display:none!important}
+#app{min-height:100vh;position:relative;overflow:hidden}
+#app:before,#app:after{content:"";position:fixed;border-radius:50%;pointer-events:none;filter:blur(3px)}
+#app:before{width:430px;height:430px;right:-180px;top:-180px;background:#294566;opacity:.35}
+#app:after{width:390px;height:390px;left:-190px;bottom:-170px;background:#49385a;opacity:.28}
+.shell{width:min(1120px,100%);margin:auto;padding:18px 20px 45px;position:relative;z-index:1}
+.top{height:64px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:21px}
+.brand-mark{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,#ffc765,#f0a54b);display:grid;place-items:center;color:#172033;box-shadow:0 8px 24px #ffc76525}
+.top-actions{display:flex;gap:8px}
+.icon-btn{width:44px;height:44px;border:1px solid #31415e;background:#17233a;color:var(--cream);border-radius:13px;cursor:pointer}
+.icon-btn:hover{background:#243452}
+.screen{display:none;animation:enter .3s ease}.screen.active{display:block}
+@keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero{min-height:calc(100vh - 120px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:35px;padding:25px 0}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;color:#1d2638;background:var(--yellow);border-radius:999px;padding:8px 13px;font-weight:900;font-size:13px}
+h1{font-size:clamp(46px,8vw,82px);line-height:.94;letter-spacing:-3px;margin:17px 0}
+h1 span{color:var(--yellow)}
+.hero p{font-size:18px;line-height:1.7;color:var(--muted);max-width:620px;margin:0 0 25px}
+.btn{border:0;border-radius:15px;min-height:48px;padding:12px 20px;font-weight:900;cursor:pointer;transition:.18s}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.98)}
+.primary{background:var(--yellow);color:#182033;box-shadow:0 10px 28px #ffc76520}
+.secondary{background:#202e49;color:var(--cream);border:1px solid #34435f}
+.big{font-size:18px;padding:15px 25px}
+.hero-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.hero-art{height:470px;border:1px solid #31415e;background:linear-gradient(145deg,#18263f,#101b30);border-radius:36px;box-shadow:var(--shadow);position:relative;overflow:hidden;display:grid;place-items:center}
+.moon{position:absolute;width:230px;height:230px;border-radius:50%;background:#fff0c7;top:45px;right:35px;box-shadow:0 0 80px #ffe9a455}
+.home{font-size:145px;position:relative;z-index:2;filter:drop-shadow(0 20px 12px #0005);animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-9px)}}
+.cloud{position:absolute;font-size:44px;opacity:.6}.c1{left:35px;top:80px}.c2{right:25px;bottom:85px}
+.hero-note{position:absolute;bottom:25px;background:#10192ad9;border:1px solid #394964;border-radius:16px;padding:12px 16px;font-weight:800}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:25px 0}
+.section-title h2{margin:0;font-size:34px}.section-title p{margin:5px 0 0;color:var(--muted)}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.card{background:linear-gradient(145deg,#1a2740,#162239);border:1px solid #30405d;border-radius:24px;padding:19px;box-shadow:0 12px 35px #0002}
+.activity-card{cursor:pointer;position:relative;overflow:hidden;min-height:230px}
+.activity-card:hover{transform:translateY(-4px);border-color:#536784}
+.activity-icon{width:76px;height:76px;border-radius:22px;display:grid;place-items:center;font-size:43px;background:#263754;margin-bottom:14px}
+.activity-card h3{margin:0 0 6px;font-size:23px}.activity-card p{margin:0;color:var(--muted);line-height:1.55}
+.tag{display:inline-block;margin-top:15px;padding:6px 9px;border-radius:9px;background:#263754;color:#d7e3f2;font-size:12px;font-weight:800}
+.progress-card{margin-top:17px}.progress-track{height:13px;background:#0d1524;border-radius:99px;overflow:hidden;margin:12px 0}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--yellow),var(--green));border-radius:inherit;transition:.35s}
+.game-layout{display:grid;grid-template-columns:270px 1fr;gap:16px}
+.steps{display:grid;gap:8px;margin-top:14px}.step{display:flex;align-items:center;gap:10px;padding:11px;border-radius:14px;background:#131e31;color:#8796ad;font-weight:800}.step.active{background:#263754;color:var(--cream)}.step.done{background:#17372f;color:#9be5c4}
+.step-no{width:31px;height:31px;border-radius:10px;background:#273653;display:grid;place-items:center;flex:none}.done .step-no{background:var(--green);color:#173127}
+.game-stage{min-height:600px;background:linear-gradient(180deg,#d8edf1 0%,#edf3e9 62%,#d5dfca 62%);border-radius:28px;position:relative;overflow:hidden;color:#1e293d;border:1px solid #4c5c6f;display:flex;align-items:center;justify-content:center;padding:25px}
+.stage-sun{position:absolute;width:150px;height:150px;border-radius:50%;background:#ffe3a1;right:8%;top:8%;opacity:.8}
+.stage-ground{position:absolute;bottom:0;left:0;right:0;height:38%;background:repeating-linear-gradient(90deg,#d1ddc7 0 40px,#c8d8be 40px 80px);opacity:.6}
+.stage-content{position:relative;z-index:2;width:min(670px,100%);text-align:center}
+.scene-icon{font-size:105px;filter:drop-shadow(0 14px 8px #30404a35);margin:0 0 5px}
+.stage-content h2{font-size:34px;margin:4px 0}.hint{color:#526176;margin:5px auto 18px;font-weight:650}
+.action-box{background:#fffffff0;border:1px solid #d9e0e3;border-radius:24px;padding:18px;box-shadow:0 16px 35px #2e3a401f}
+.counter{font-size:42px;font-weight:950;color:#4457bd;margin:3px}
+.action-row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+.tap-target{min-width:210px}
+.choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.choice{border:2px solid #dce3e9;background:white;border-radius:16px;padding:13px;cursor:pointer;font-weight:900;color:#28344a}.choice.selected{border-color:#5664d7;background:#f0f1ff}
+.message{margin-top:13px;min-height:24px;color:#56657a;font-weight:800}
+.result{max-width:720px;margin:70px auto;text-align:center;padding:42px 25px}
+.stars{font-size:48px}.result h2{font-size:42px;margin:10px 0}.result p{color:var(--muted);font-size:18px}
+.settings{max-width:700px;margin:35px auto}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 0;border-bottom:1px solid #30405d}.setting-row h3{margin:0 0 4px}.setting-row p{margin:0;color:var(--muted);font-size:14px}
+.switch{width:58px;height:32px;border:0;border-radius:99px;background:#394963;padding:3px;cursor:pointer}.switch i{display:block;width:26px;height:26px;border-radius:50%;background:white;transition:.2s}.switch.on{background:var(--green)}.switch.on i{transform:translateX(26px)}
+.select{background:#202e49;color:white;border:1px solid #40516e;border-radius:12px;padding:10px}
+.toast{position:fixed;z-index:99;left:50%;bottom:22px;transform:translate(-50%,130px);background:#f9f1df;color:#202b3e;border-radius:999px;padding:12px 18px;font-weight:900;box-shadow:var(--shadow);transition:.25s}.toast.show{transform:translate(-50%,0)}
+.footer{text-align:center;color:#66758d;font-size:12px;margin-top:28px}
+@media(max-width:820px){.hero{grid-template-columns:1fr;min-height:auto;padding:40px 0}.hero-art{height:300px}.home{font-size:100px}.card-grid{grid-template-columns:1fr}.game-layout{grid-template-columns:1fr}.game-stage{min-height:540px}.section-title{align-items:start;flex-direction:column}}
+@media(max-width:520px){.shell{padding:10px 13px 35px}.top{height:58px}.brand{font-size:18px}.brand-mark{width:39px;height:39px}.hero p{font-size:16px}h1{letter-spacing:-2px}.hero-art{display:none}.choice-grid{grid-template-columns:1fr}.game-stage{padding:14px}.scene-icon{font-size:82px}.stage-content h2{font-size:27px}.result{margin:35px auto}.section-title h2{font-size:28px}}
+</style>
+</head>
+<body>
+<div id="app">
+ <div class="shell">
+  <header class="top">
+   <div class="brand"><div class="brand-mark">🌱</div>Little Steps</div>
+   <div class="top-actions">
+    <button class="icon-btn" aria-label="ตั้งค่า" onclick="openSettings()">⚙️</button>
+    <button class="icon-btn" aria-label="หน้าหลัก" onclick="goHome()">⌂</button>
+   </div>
+  </header>
+
+  <main>
+   <section id="start" class="screen active">
+    <div class="hero">
+     <div>
+      <div class="eyebrow">🌙 DAILY ROUTINE • กิจวัตรประจำวัน</div>
+      <h1>ก้าวเล็ก ๆ<br><span>เก่งขึ้นทุกวัน</span></h1>
+      <p>เกมฝึกดูแลตัวเองสำหรับเด็ก เรียนรู้ผ่านสถานการณ์จำลองที่เข้าใจง่าย ทั้งแปรงฟัน ล้างมือ อาบน้ำ และกิจกรรมเสริม พร้อมคะแนน ดาว และความคืบหน้า</p>
+      <div class="hero-buttons">
+       <button class="btn primary big" onclick="openActivities()">▶ เริ่มเกม</button>
+       <button class="btn secondary big" onclick="openSettings()">⚙️ ตั้งค่า</button>
+      </div>
+     </div>
+     <div class="hero-art"><div class="moon"></div><div class="cloud c1">☁️</div><div class="cloud c2">☁️</div><div class="home">🏠</div><div class="hero-note">วันนี้เราจะดูแลตัวเองให้เก่งขึ้น ✨</div></div>
+    </div>
+   </section>
+
+   <section id="activities" class="screen">
+    <div class="section-title"><div><h2>เลือกกิจกรรม</h2><p>เลือกกิจกรรมที่อยากฝึก แล้วทำตามขั้นตอน</p></div><button class="btn secondary" onclick="goHome()">← กลับหน้า Start</button></div>
+    <div class="card-grid">
+     <article class="card activity-card" onclick="startGame('brush')"><div class="activity-icon">🪥</div><h3>แปรงฟัน</h3><p>เรียนรู้การแปรงฟันให้ทั่วถึงทุกด้าน</p><span class="tag">🪥 4 ขั้นตอน</span></article>
+     <article class="card activity-card" onclick="startGame('hands')"><div class="activity-icon">🧼</div><h3>ล้างมือ</h3><p>ฝึกขั้นตอนล้างมือ ตั้งแต่เปิดน้ำจนเช็ดมือ</p><span class="tag">🧼 5 ขั้นตอน</span></article>
+     <article class="card activity-card" onclick="startGame('bath')"><div class="activity-icon">🛁</div><h3>อาบน้ำ</h3><p>เตรียมของใช้และทำความสะอาดร่างกาย</p><span class="tag">🛁 5 ขั้นตอน</span></article>
+    </div>
+    <div class="card progress-card"><b>⭐ ความคืบหน้าวันนี้</b><div class="progress-track"><div id="overall" class="progress-fill"></div></div><span id="overallText" style="color:var(--muted)">0 / 3 กิจกรรม</span></div>
+   </section>
+
+   <section id="game" class="screen">
+    <div class="section-title"><div><h2 id="gameTitle">กิจกรรม</h2><p id="gameSub"></p></div><button class="btn secondary" onclick="openActivities()">✕ ออกจากกิจกรรม</button></div>
+    <div class="game-layout">
+     <aside class="card"><b>📋 ขั้นตอน</b><div class="steps" id="steps"></div><div style="margin-top:18px;color:var(--muted);font-size:13px">คะแนนสะสม: <b id="sideScore">0</b> ⭐</div></aside>
+     <div class="game-stage"><div class="stage-sun"></div><div class="stage-ground"></div><div class="stage-content" id="stage"></div></div>
+    </div>
+   </section>
+
+   <section id="result" class="screen">
+    <div class="card result"><div class="stars">⭐ ⭐ ⭐</div><h2 id="resultTitle">เก่งมาก!</h2><p id="resultText"></p><div class="hero-buttons" style="justify-content:center"><button class="btn primary big" onclick="openActivities()">เลือกกิจกรรมต่อ</button><button class="btn secondary big" onclick="goHome()">หน้า Start</button></div></div>
+   </section>
+
+   <section id="settings" class="screen">
+    <div class="section-title"><div><h2>ตั้งค่า ⚙️</h2><p>ปรับเกมให้เหมาะกับการเล่นของคุณ</p></div><button class="btn secondary" onclick="goBack()">← กลับ</button></div>
+    <div class="card settings">
+     <div class="setting-row"><div><h3>🔊 เสียง</h3><p>เปิดเสียงตอบรับเมื่อทำขั้นตอนสำเร็จ</p></div><button id="soundSwitch" class="switch on" onclick="toggleSetting('sound')"><i></i></button></div>
+     <div class="setting-row"><div><h3>✨ Animation</h3><p>เปิดเอฟเฟกต์การเคลื่อนไหวของหน้าเกม</p></div><button id="motionSwitch" class="switch on" onclick="toggleSetting('motion')"><i></i></button></div>
+     <div class="setting-row"><div><h3>📳 สั่นเมื่อแตะ</h3><p>ใช้ vibration หากอุปกรณ์รองรับ</p></div><button id="vibrateSwitch" class="switch on" onclick="toggleSetting('vibrate')"><i></i></button></div>
+     <div class="setting-row"><div><h3>🏆 คะแนน</h3><p>คะแนนจะถูกเก็บไว้เฉพาะในหน้านี้ระหว่างการเล่น</p></div><button class="btn secondary" onclick="resetProgress()">รีเซ็ต</button></div>
+    </div>
+   </section>
+  </main>
+  <div class="footer">Little Steps • HTML + CSS + JavaScript เท่านั้น • ไม่มี WebGL / WebGL2 • เล่นบน GitHub Pages ได้</div>
+ </div>
+ <div id="toast" class="toast"></div>
+</div>
+
+<script>
+const DATA={
+ brush:{title:"แปรงฟัน",icon:"🪥",sub:"แปรงฟันให้ครบ 20 ครั้ง โดยค่อย ๆ เปลี่ยนตำแหน่ง",steps:["เตรียมแปรงและยาสีฟัน","แปรงด้านนอก","แปรงด้านใน","แปรงด้านบดเคี้ยว"],type:"brush"},
+ hands:{title:"ล้างมือ",icon:"🧼",sub:"ทำตามขั้นตอนล้างมือทีละขั้น",steps:["เปิดน้ำ","ใส่สบู่","ถูฝ่ามือและซอกนิ้ว","ล้างฟองสบู่","เช็ดมือให้แห้ง"],type:"sequence"},
+ bath:{title:"อาบน้ำ",icon:"🛁",sub:"เลือกของใช้ที่ถูกต้อง แล้วทำตามขั้นตอน",steps:["เลือกสบู่","เลือกแชมพู","สระผม","ฟอกตัว","ล้างตัว"],type:"bath"}
+};
+let S={score:0,done:new Set(),task:null,index:0,taps:0,selected:null,previous:"start",settings:{sound:true,motion:true,vibrate:true}};
+
+function el(id){return document.getElementById(id)}
+function show(id){
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ el(id).classList.add("active"); window.scrollTo(0,0);
+}
+function goHome(){S.previous="start";show("start")}
+function openActivities(){S.previous="activities";renderProgress();show("activities")}
+function openSettings(){S.previous=document.querySelector(".screen.active")?.id||"start";show("settings")}
+function goBack(){show(S.previous||"start")}
+function renderProgress(){
+ const n=S.done.size;el("overall").style.width=(n/3*100)+"%";el("overallText").textContent=n+" / 3 กิจกรรม";
+}
+function renderSteps(){
+ const d=DATA[S.task];
+ el("steps").innerHTML=d.steps.map((x,i)=>`<div class="step ${i<S.index?"done":i===S.index?"active":""}"><span class="step-no">${i<S.index?"✓":i+1}</span>${x}</div>`).join("");
+ el("sideScore").textContent=S.score;
+}
+function startGame(key){
+ S.task=key;S.index=0;S.taps=0;S.selected=null;
+ el("gameTitle").textContent=DATA[key].title;el("gameSub").textContent=DATA[key].sub;
+ renderSteps();renderStage();show("game");
+}
+function renderStage(){
+ const d=DATA[S.task],a=el("stage");
+ if(d.type==="brush"){
+  const pos=["เตรียมแปรง","ด้านนอก","ด้านใน","ด้านบดเคี้ยว"][S.index]||"เสร็จแล้ว";
+  a.innerHTML=`<div class="scene-icon">${d.icon}</div><h2>${pos}</h2><div class="hint">แตะปุ่มแปรงฟัน ${S.taps}/20 ครั้ง</div><div class="action-box"><div class="counter">${S.taps} / 20</div><div class="action-row"><button class="btn primary big tap-target" onclick="brushTap()">🪥 แปรงฟัน</button><button class="btn secondary" onclick="S.taps=0;renderStage()">เริ่มใหม่</button></div><div class="message">แปรงเบา ๆ และให้ทั่วทุกซี่นะ 😊</div></div>`;
+ }else if(d.type==="sequence"){
+  const icons=["🚰","🧼","👐","💦","🧻"],tips=["เปิดน้ำให้พอดี","ใส่สบู่แล้วถูให้ทั่วมือ","ถูฝ่ามือ หลังมือ และซอกนิ้ว","ล้างฟองออกให้หมด","เช็ดมือด้วยผ้าสะอาด"];
+  a.innerHTML=`<div class="scene-icon">${icons[S.index]}</div><h2>${d.steps[S.index]}</h2><div class="hint">${tips[S.index]}</div><div class="action-box"><button class="btn primary big" onclick="next()">✓ ทำขั้นตอนนี้แล้ว</button><div class="message">ขั้นตอน ${S.index+1} จาก ${d.steps.length}</div></div>`;
+ }else{
+  const icons=["🧼","🧴","🫧","🧽","🚿"];
+  const choices=[["🧼","สบู่"],["🧴","แชมพู"],["🧽","ฟองน้ำ"]];
+  a.innerHTML=`<div class="scene-icon">${icons[S.index]}</div><h2>${d.steps[S.index]}</h2><div class="hint">${S.index<2?"เลือกของใช้ที่เหมาะสม":"ทำขั้นตอนนี้แล้วกดปุ่มต่อไป"}</div><div class="action-box">${S.index<2?`<div class="choice-grid">${choices.map((c,i)=>`<button class="choice ${S.selected===i?"selected":""}" onclick="choose(${i})">${c[0]}<br>${c[1]}</button>`).join("")}</div>`:""}<div class="action-row" style="margin-top:14px"><button class="btn primary big" onclick="next()">${S.index<2?"ยืนยัน":"✓ ทำเสร็จแล้ว"}</button></div><div class="message">${S.index<2?"เลือกให้ถูกต้องก่อนนะ":"เกือบเสร็จแล้ว!"}</div></div>`;
+ }
+}
+function brushTap(){
+ S.taps++;feedback();
+ if(S.taps>=20){S.index=DATA.brush.steps.length;finish();return}
+ S.index=Math.min(3,Math.floor(S.taps/5));renderSteps();renderStage();
+}
+function choose(i){S.selected=i;renderStage()}
+function next(){
+ if(S.task==="bath"&&S.index<2&&S.selected===null){toast("เลือกของใช้ก่อนนะ 😊");return}
+ if(S.task==="bath"&&S.index===0&&S.selected!==0){toast("ลองเลือกสบู่ 🧼");return}
+ if(S.task==="bath"&&S.index===1&&S.selected!==1){toast("ขั้นนี้ควรเลือกแชมพู 🧴");return}
+ S.selected=null;S.index++;feedback();
+ if(S.index>=DATA[S.task].steps.length){finish();return}
+ renderSteps();renderStage();
+}
+function feedback(){if(S.settings.vibrate&&navigator.vibrate)navigator.vibrate(8)}
+function finish(){
+ if(!S.done.has(S.task)){S.done.add(S.task);S.score+=100}
+ el("resultTitle").textContent="เก่งมาก! 🎉";
+ el("resultText").textContent=`คุณทำ “${DATA[S.task].title}” สำเร็จแล้ว ได้รับ 100 คะแนน • คะแนนรวม ${S.score} ⭐`;
+ show("result");renderProgress();
+}
+function toggleSetting(k){
+ S.settings[k]=!S.settings[k];
+ const map={sound:"soundSwitch",motion:"motionSwitch",vibrate:"vibrateSwitch"};
+ el(map[k]).classList.toggle("on",S.settings[k]);
+}
+function resetProgress(){
+ S.score=0;S.done.clear();toast("รีเซ็ตคะแนนและความคืบหน้าแล้ว");openActivities();
+}
+function toast(msg){
+ const t=el("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove("show"),1700);
+}
+renderProgress();
+</script>
+</body>
+</html>
